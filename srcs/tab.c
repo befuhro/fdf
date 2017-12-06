@@ -1,0 +1,245 @@
+#include "libft.h"
+#include "fdf.h"
+#include "mlx.h"
+#include <stdio.h>
+
+int		my_key_func(int keycode)
+{
+	if (keycode == 53)
+		exit(0);
+	return (0);
+}
+
+
+int		count_height(char *buff)
+{
+	int i;
+	int j;
+
+	i = 0;
+	j = 0;
+	while (buff[i])
+	{
+		if (buff[i] == '\n')
+			j++;
+		i++;
+	}
+	return (j);
+}
+
+int		count_width(char *buff)
+{
+	int i;
+	int j;
+
+	i = 0;
+	j = 1;
+	while (buff[i] && buff[i] != '\n')
+	{
+		if (buff[i] == ' ')
+		{
+			j++;
+			while (buff[i] == ' ')
+				i++;
+		}
+		i++;
+	}
+	return (j);
+}
+
+t_coord	**create_tab(int width, int height, char *buff)
+{
+	t_coord **matrix;
+	int i;
+	int j;
+	int k;
+
+	j = -1;
+	i = -1;
+	k = 0;
+	matrix = (t_coord**)malloc(sizeof(t_coord*) * height);
+	while (++i < height)
+		matrix[i] = (t_coord*)malloc(sizeof(t_coord) * width);
+	i = -1;
+	while (++i < height)
+	{
+		while (++j < width)
+		{
+			matrix[i][j].x = (i * 30) + (j * 30) + 50;
+			matrix[i][j].y = ((width - j) * 22) + (i * 22) + 50;
+			matrix[i][j].z = ft_atoi(buff + k);
+			if (matrix[i][j].z > 0)
+				matrix[i][j].y -= (matrix[i][j].z * 20);
+			while (buff[k] && (buff[k] >= '0' && buff[k] <= '9'))
+				k++;
+			while (buff[k] && (buff[k] == ' ' || buff[k] == '\t' || buff[k] == '\n'))
+				k++;
+		}
+		j = -1;
+	}
+	return (matrix);
+}
+
+
+void	trace_line(t_coord begin, t_coord end, void *mlx, void *win)
+{
+	t_coord line;
+
+	line.x = begin.x;
+	line.y = begin.y;
+	printf("begin.x = %i\nbegin.y = %i\nend.x = %i\nend.y%i\n\n", begin.x, begin.y, end.x, end.y);
+	while (line.x != end.x && line.y != end.y)
+	{
+		if (end.y - line.y > 0)
+		{
+			if ((end.y - line.y) > (end.x - line.x))
+				line.y += 1;
+			else
+				line.x += 1;
+		}
+		else
+		{
+			if ((line.y - end.y) > (end.x - line.x))
+				line.y -= 1;
+			else
+				line.x += 1;
+		}
+		mlx_pixel_put(mlx, win, line.x, line.y, 0x00FFFFFF);
+	}
+}
+
+void	rely_point(t_coord **matrix, int width, int height, void *mlx, void *win)
+{
+	int i;
+	int j;
+
+	i = 0;
+	j = 0;
+	while (i < height)
+	{
+		while(j < width)
+		{
+			if (j < width - 1)
+				trace_line(matrix[i][j], matrix[i][j + 1], mlx, win);
+			if (i < height - 1)
+				trace_line(matrix[i][j], matrix[i + 1][j], mlx, win);
+			j++;
+		}
+		i++;
+		j = 0;
+	}
+}
+
+
+
+void	print_matrix(t_coord **matrix, int height, int width)
+{
+	int i = 0;
+	int j = 0;
+
+	
+	while (i < height)
+	{
+		while (j < width)
+		{
+			if (matrix[i][j].z == 10)
+				printf(" %i", matrix[i][j].z);
+			else
+				printf("  %i", matrix[i][j].z);
+			j++;
+		}
+		printf("\n");
+		j = 0;
+		i++;
+	}
+}
+
+void	draw_square(t_coord point, void *mlx, void *win)
+{
+	int sub_x;
+	int sub_y;
+
+	sub_x = point.x - 2;
+	sub_y = point.y - 2;
+	while (sub_y < point.y + 2)
+	{
+		while (sub_x < point.x + 2)
+		{
+			if (point.z == 10)
+				mlx_pixel_put(mlx, win, sub_x, sub_y, 0x00FF0000);
+			else
+				mlx_pixel_put(mlx, win, sub_x, sub_y, 0x00FFFFFF);
+			sub_x++;
+		}
+		sub_x = point.x - 2;
+		sub_y++;
+	}
+}
+
+void	print_window(t_coord **matrix, int height, int width)
+{
+	void	*mlx;
+	void	*win;
+	int		i;
+	int 	j;
+
+	i = 0;
+	j = 0;
+	mlx = mlx_init();
+	win = mlx_new_window(mlx, 1080, 720, "mlx fdf");
+	
+	
+	while(i < height)
+	{
+		while (j < width)
+		{
+			draw_square(matrix[i][j], mlx, win);
+		//	rely_point(matrix, width, height, mlx, win);
+			j++;
+		}
+		j = 0;
+		i++;
+	}
+	mlx_key_hook(win, my_key_func, mlx);
+	mlx_loop(mlx);
+}
+
+
+
+
+
+void	treatment(char *buff)
+{
+	int		height;
+	int		width;
+	t_coord	**matrix;
+
+
+
+	height = count_height(buff);
+	width = count_width(buff);
+	matrix = create_tab(width, height, buff);
+	print_matrix(matrix, height, width);
+	print_window(matrix, height, width);
+}
+
+
+
+int		main(int ac, char **av)
+{
+	int fd;
+	char buff[BUFF_SIZE];
+
+	if (ac == 2)
+	{
+		fd = open(av[1], O_RDONLY);
+		if (fd == -1)
+		{
+			ft_putstr("The file couldn't be open\n");
+			exit(1);
+		}
+		read(fd, buff, BUFF_SIZE);
+		treatment(buff);
+	}	
+	return (0);
+}
