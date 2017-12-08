@@ -47,7 +47,7 @@ int		count_width(char *buff)
 	return (j);
 }
 
-t_coord	**create_tab(int width, int height, char *buff)
+t_coord	**create_matrix(int latitude, int width, int height, char *buff)
 {
 	t_coord **matrix;
 	int i;
@@ -65,8 +65,8 @@ t_coord	**create_tab(int width, int height, char *buff)
 	{
 		while (++j < width)
 		{
-			matrix[i][j].x = (i * 30) + (j * 30) + 50;
-			matrix[i][j].y = ((width - j) * 22) + (i * 22) + 50;
+			matrix[i][j].x = (i * 25) + (j * 25) + 50;
+			matrix[i][j].y = ((width - j) * latitude) + (i * latitude) + 50;
 			matrix[i][j].z = ft_atoi(buff + k);
 			if (matrix[i][j].z != 0)
 				matrix[i][j].y -= (matrix[i][j].z * 6);
@@ -283,13 +283,14 @@ void	treatment(char *buff)
 {
 	int		height;
 	int		width;
-	t_coord	**matrix;
+	t_whole		whole;
 
+	whole.latitude = 10;
 	height = count_height(buff);
 	width = count_width(buff);
-	matrix = create_tab(width, height, buff);
-	print_matrix(matrix, height, width);
-	print_window(matrix, height, width);
+	whole.matrix = create_matrix(whole.latitude, width, height, buff);
+	print_matrix(whole.matrix, height, width);
+	print_window(whole.matrix, height, width);
 }
 
 
