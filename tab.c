@@ -5,11 +5,11 @@
 
 int		my_key_func(int keycode)
 {
-	if (keycode == 53)
+	if (keycode == 53 || keycode == 65307)
 		exit(0);
+	printf("keycode = %i\n", keycode);
 	return (0);
 }
-
 
 int		count_height(char *buff)
 {
@@ -68,9 +68,9 @@ t_coord	**create_tab(int width, int height, char *buff)
 			matrix[i][j].x = (i * 30) + (j * 30) + 50;
 			matrix[i][j].y = ((width - j) * 22) + (i * 22) + 50;
 			matrix[i][j].z = ft_atoi(buff + k);
-			if (matrix[i][j].z > 0)
-				matrix[i][j].y -= (matrix[i][j].z * 4);
-			while (buff[k] && (buff[k] >= '0' && buff[k] <= '9'))
+			if (matrix[i][j].z != 0)
+				matrix[i][j].y -= (matrix[i][j].z * 6);
+			while (buff[k] && ((buff[k] >= '0' && buff[k] <= '9') || buff[k] == '-'))
 				k++;
 			while (buff[k] && (buff[k] == ' ' || buff[k] == '\t' || buff[k] == '\n'))
 				k++;
@@ -80,8 +80,29 @@ t_coord	**create_tab(int width, int height, char *buff)
 	return (matrix);
 }
 
+void	print_color(t_mlx mlx, t_coord point, t_coord begin, t_coord end)
+{
+	if (begin.z == 0 && end.z == 0)	
+		mlx_pixel_put(mlx.init, mlx.win, point.x, point.y, 0x002BBF2B);
+	if (begin.z > 0 && end.z > 0)	
+		mlx_pixel_put(mlx.init, mlx.win, point.x, point.y, 0x00FEFEFE);
+	if (begin.z > 0 && end.z == 0)
+		mlx_pixel_put(mlx.init, mlx.win, point.x, point.y, 0x007D540D);
+	if (end.z > 0 && begin.z == 0)
+		mlx_pixel_put(mlx.init, mlx.win, point.x, point.y, 0x007D540D);
 
-void	trace_higher(t_coord begin, t_coord end, void *mlx, void *win)
+
+
+	if (begin.z < 0 && end.z < 0)	
+		mlx_pixel_put(mlx.init, mlx.win, point.x, point.y, 0x002B3ABF);
+	if (begin.z < 0 && end.z == 0)
+		mlx_pixel_put(mlx.init, mlx.win, point.x, point.y, 0x002BABBF);
+	if (end.z < 0 && begin.z == 0)
+		mlx_pixel_put(mlx.init, mlx.win, point.x, point.y, 0x002BABBF);
+}
+
+
+void	trace_higher(t_coord begin, t_coord end, t_mlx mlx)
 {
 	t_coord line;
 	float base;
@@ -106,7 +127,7 @@ void	trace_higher(t_coord begin, t_coord end, void *mlx, void *win)
 				count ++;
 			}
 			base += count_base;
-			mlx_pixel_put(mlx, win, line.x, line.y, 0x001BFF02);
+			print_color(mlx, line, begin, end);
 		}
 	}
 	else
@@ -122,16 +143,14 @@ void	trace_higher(t_coord begin, t_coord end, void *mlx, void *win)
 				base += count_base;
 			}
 			count++;
-
-
-			mlx_pixel_put(mlx, win, line.x, line.y, 0x001BFF02);
+			print_color(mlx, line, begin, end);
 		}
 	}
 }
 
 
 
-void	trace_lower(t_coord begin, t_coord end, void *mlx, void *win)
+void	trace_lower(t_coord begin, t_coord end, t_mlx mlx)
 {
 	t_coord line;
 	float base;
@@ -156,7 +175,7 @@ void	trace_lower(t_coord begin, t_coord end, void *mlx, void *win)
 				count ++;
 			}
 			base += count_base;
-			mlx_pixel_put(mlx, win, line.x, line.y, 0x001BFF02);
+			print_color(mlx, line, begin, end);
 		}
 	}
 	else
@@ -171,11 +190,9 @@ void	trace_lower(t_coord begin, t_coord end, void *mlx, void *win)
 				line.x += 1;
 				base += count_base;
 			}
-			printf("count = %.3f     base = %.3f\n", count, base);
 			count++;
-			mlx_pixel_put(mlx, win, line.x, line.y, 0x001BFF02);
+			print_color(mlx, line, begin, end);
 		}
-
 	}
 }
 
@@ -184,12 +201,12 @@ void	trace_lower(t_coord begin, t_coord end, void *mlx, void *win)
 
 
 
-void	trace_line(t_coord begin, t_coord end, void *mlx, void *win)
+void	trace_line(t_coord begin, t_coord end,  t_mlx mlx)
 {
 	if (end.y - begin.y < 0)
-		trace_higher(begin, end, mlx, win);
+		trace_higher(begin, end, mlx);
 	else	
-		trace_lower(begin, end, mlx, win);
+		trace_lower(begin, end, mlx);
 
 }
 
@@ -198,7 +215,7 @@ void	trace_line(t_coord begin, t_coord end, void *mlx, void *win)
 
 
 
-void	rely_point(t_coord **matrix, int width, int height, void *mlx, void *win)
+void	rely_point(t_coord **matrix, int width, int height, t_mlx mlx)
 {
 	int i;
 	int j;
@@ -210,9 +227,9 @@ void	rely_point(t_coord **matrix, int width, int height, void *mlx, void *win)
 		while(j < width)
 		{
 			if (j < width - 1)
-				trace_line(matrix[i][j], matrix[i][j + 1], mlx, win);
+				trace_line(matrix[i][j], matrix[i][j + 1], mlx);
 			if (i < height - 1)
-				trace_line(matrix[i][j], matrix[i + 1][j], mlx, win);
+				trace_line(matrix[i][j], matrix[i + 1][j], mlx);
 			j++;
 		}
 		i++;
@@ -244,54 +261,18 @@ void	print_matrix(t_coord **matrix, int height, int width)
 	}
 }
 
-void	draw_square(t_coord point, void *mlx, void *win)
-{
-	int sub_x;
-	int sub_y;
-
-	sub_x = point.x - 2;
-	sub_y = point.y - 2;
-	while (sub_y < point.y + 2)
-	{
-		while (sub_x < point.x + 2)
-		{
-			if (point.z == 10)
-				mlx_pixel_put(mlx, win, sub_x, sub_y, 0x00FF0000);
-			else
-				mlx_pixel_put(mlx, win, sub_x, sub_y, 0x00FFFFFF);
-			sub_x++;
-		}
-		sub_x = point.x - 2;
-		sub_y++;
-	}
-}
 
 void	print_window(t_coord **matrix, int height, int width)
 {
-	void	*mlx;
-	void	*win;
-	int		i;
-	int 	j;
+	t_mlx mlx;
 
-	i = 0;
-	j = 0;
-	mlx = mlx_init();
-	win = mlx_new_window(mlx, 1080, 720, "mlx fdf");
+	mlx.init = mlx_init();
+	mlx.win = mlx_new_window(mlx.init, 1080, 720, "mlx fdf");
 
 
-	while(i < height)
-	{
-		while (j < width)
-		{
-			//			draw_square(matrix[i][j], mlx, win);
-			rely_point(matrix, width, height, mlx, win);
-			j++;
-		}
-		j = 0;
-		i++;
-	}
-	mlx_key_hook(win, my_key_func, mlx);
-	mlx_loop(mlx);
+	rely_point(matrix, width, height, mlx);
+	mlx_key_hook(mlx.win, my_key_func, mlx.init);
+	mlx_loop(mlx.init);
 }
 
 
@@ -303,8 +284,6 @@ void	treatment(char *buff)
 	int		height;
 	int		width;
 	t_coord	**matrix;
-
-
 
 	height = count_height(buff);
 	width = count_width(buff);
