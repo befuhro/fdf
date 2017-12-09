@@ -3,10 +3,33 @@
 #include <mlx.h>
 #include <stdio.h>
 
-int		my_key_func(int keycode)
+t_coord **create_matrix(int latitude, int width, int height, char *buff);
+void	rely_point(t_coord **matrix, int width, int height, t_whole *whole);
+void	clear_window(t_whole *whole);
+
+int		my_key_func(int keycode, t_whole *whole)
 {
 	if (keycode == 53 || keycode == 65307)
 		exit(0);
+	if (keycode == 65362)
+	{
+		whole->latitude += 1;
+		whole->matrix = create_matrix(whole->latitude, whole->width, whole->height, whole->buff);
+		clear_window(whole);	
+		rely_point(whole->matrix, whole->width, whole->height, whole);
+	}
+
+	if (keycode == 65364)
+	{
+		whole->latitude -= 1;
+		whole->matrix = create_matrix(whole->latitude, whole->width, whole->height, whole->buff);
+		clear_window(whole);	
+		rely_point(whole->matrix, whole->width, whole->height, whole);
+	}
+
+
+
+
 	printf("keycode = %i\n", keycode);
 	return (0);
 }
@@ -66,7 +89,7 @@ t_coord	**create_matrix(int latitude, int width, int height, char *buff)
 		while (++j < width)
 		{
 			matrix[i][j].x = (i * 25) + (j * 25) + 50;
-			matrix[i][j].y = ((width - j) * latitude) + (i * latitude) + 50;
+			matrix[i][j].y = ((width - j) * latitude) + (i * latitude) + 300;
 			matrix[i][j].z = ft_atoi(buff + k);
 			if (matrix[i][j].z != 0)
 				matrix[i][j].y -= (matrix[i][j].z * 6);
@@ -80,29 +103,49 @@ t_coord	**create_matrix(int latitude, int width, int height, char *buff)
 	return (matrix);
 }
 
-void	print_color(t_mlx mlx, t_coord point, t_coord begin, t_coord end)
+void	clear_window(t_whole *whole)
+{
+	int i;
+	int j;
+
+	i = 0;
+	j = 0;
+	while (i < 720)
+	{
+		while (j < 1080)
+		{
+			mlx_pixel_put(whole->init, whole->win, j, i, 0x00000000);
+			j++;
+		}
+		j = 0;
+		i++;
+	}
+}
+
+
+void	print_color(t_whole *whole, t_coord point, t_coord begin, t_coord end)
 {
 	if (begin.z == 0 && end.z == 0)	
-		mlx_pixel_put(mlx.init, mlx.win, point.x, point.y, 0x002BBF2B);
+		mlx_pixel_put(whole->init, whole->win, point.x, point.y, 0x002BBF2B);
 	if (begin.z > 0 && end.z > 0)	
-		mlx_pixel_put(mlx.init, mlx.win, point.x, point.y, 0x00FEFEFE);
+		mlx_pixel_put(whole->init, whole->win, point.x, point.y, 0x00FEFEFE);
 	if (begin.z > 0 && end.z == 0)
-		mlx_pixel_put(mlx.init, mlx.win, point.x, point.y, 0x007D540D);
+		mlx_pixel_put(whole->init, whole->win, point.x, point.y, 0x007D540D);
 	if (end.z > 0 && begin.z == 0)
-		mlx_pixel_put(mlx.init, mlx.win, point.x, point.y, 0x007D540D);
+		mlx_pixel_put(whole->init, whole->win, point.x, point.y, 0x007D540D);
 
 
 
 	if (begin.z < 0 && end.z < 0)	
-		mlx_pixel_put(mlx.init, mlx.win, point.x, point.y, 0x002B3ABF);
+		mlx_pixel_put(whole->init, whole->win, point.x, point.y, 0x002B3ABF);
 	if (begin.z < 0 && end.z == 0)
-		mlx_pixel_put(mlx.init, mlx.win, point.x, point.y, 0x002BABBF);
+		mlx_pixel_put(whole->init, whole->win, point.x, point.y, 0x002BABBF);
 	if (end.z < 0 && begin.z == 0)
-		mlx_pixel_put(mlx.init, mlx.win, point.x, point.y, 0x002BABBF);
+		mlx_pixel_put(whole->init, whole->win, point.x, point.y, 0x002BABBF);
 }
 
 
-void	trace_higher(t_coord begin, t_coord end, t_mlx mlx)
+void	trace_higher(t_coord begin, t_coord end, t_whole *whole)
 {
 	t_coord line;
 	float base;
@@ -127,7 +170,7 @@ void	trace_higher(t_coord begin, t_coord end, t_mlx mlx)
 				count ++;
 			}
 			base += count_base;
-			print_color(mlx, line, begin, end);
+			print_color(whole, line, begin, end);
 		}
 	}
 	else
@@ -143,14 +186,14 @@ void	trace_higher(t_coord begin, t_coord end, t_mlx mlx)
 				base += count_base;
 			}
 			count++;
-			print_color(mlx, line, begin, end);
+			print_color(whole, line, begin, end);
 		}
 	}
 }
 
 
 
-void	trace_lower(t_coord begin, t_coord end, t_mlx mlx)
+void	trace_lower(t_coord begin, t_coord end, t_whole *whole)
 {
 	t_coord line;
 	float base;
@@ -175,7 +218,7 @@ void	trace_lower(t_coord begin, t_coord end, t_mlx mlx)
 				count ++;
 			}
 			base += count_base;
-			print_color(mlx, line, begin, end);
+			print_color(whole, line, begin, end);
 		}
 	}
 	else
@@ -191,7 +234,7 @@ void	trace_lower(t_coord begin, t_coord end, t_mlx mlx)
 				base += count_base;
 			}
 			count++;
-			print_color(mlx, line, begin, end);
+			print_color(whole, line, begin, end);
 		}
 	}
 }
@@ -201,12 +244,12 @@ void	trace_lower(t_coord begin, t_coord end, t_mlx mlx)
 
 
 
-void	trace_line(t_coord begin, t_coord end,  t_mlx mlx)
+void	trace_line(t_coord begin, t_coord end, t_whole *whole)
 {
 	if (end.y - begin.y < 0)
-		trace_higher(begin, end, mlx);
+		trace_higher(begin, end, whole);
 	else	
-		trace_lower(begin, end, mlx);
+		trace_lower(begin, end, whole);
 
 }
 
@@ -215,7 +258,7 @@ void	trace_line(t_coord begin, t_coord end,  t_mlx mlx)
 
 
 
-void	rely_point(t_coord **matrix, int width, int height, t_mlx mlx)
+void	rely_point(t_coord **matrix, int width, int height, t_whole *whole)
 {
 	int i;
 	int j;
@@ -227,9 +270,9 @@ void	rely_point(t_coord **matrix, int width, int height, t_mlx mlx)
 		while(j < width)
 		{
 			if (j < width - 1)
-				trace_line(matrix[i][j], matrix[i][j + 1], mlx);
+				trace_line(matrix[i][j], matrix[i][j + 1], whole);
 			if (i < height - 1)
-				trace_line(matrix[i][j], matrix[i + 1][j], mlx);
+				trace_line(matrix[i][j], matrix[i + 1][j], whole);
 			j++;
 		}
 		i++;
@@ -262,17 +305,12 @@ void	print_matrix(t_coord **matrix, int height, int width)
 }
 
 
-void	print_window(t_coord **matrix, int height, int width)
+void	print_window(t_whole *whole)
 {
-	t_mlx mlx;
 
-	mlx.init = mlx_init();
-	mlx.win = mlx_new_window(mlx.init, 1080, 720, "mlx fdf");
-
-
-	rely_point(matrix, width, height, mlx);
-	mlx_key_hook(mlx.win, my_key_func, mlx.init);
-	mlx_loop(mlx.init);
+	mlx_key_hook(whole->win, my_key_func, whole);
+	rely_point(whole->matrix, whole->width, whole->height, whole);
+	mlx_loop(whole->init);
 }
 
 
@@ -281,16 +319,22 @@ void	print_window(t_coord **matrix, int height, int width)
 
 void	treatment(char *buff)
 {
-	int		height;
-	int		width;
+	t_whole		*ptr;
 	t_whole		whole;
-
+	
+	ptr = &whole;
 	whole.latitude = 10;
-	height = count_height(buff);
-	width = count_width(buff);
-	whole.matrix = create_matrix(whole.latitude, width, height, buff);
-	print_matrix(whole.matrix, height, width);
-	print_window(whole.matrix, height, width);
+	whole.height = count_height(buff);
+	whole.width = count_width(buff);
+	whole.buff = buff;
+	
+	whole.init = mlx_init();
+	whole.win = mlx_new_window(whole.init, 1080, 720, "mlx fdf");
+	whole.matrix = create_matrix(whole.latitude, whole.width, whole.height, buff);
+	print_matrix(whole.matrix, whole.height, whole.width);
+
+
+	print_window(ptr);
 }
 
 

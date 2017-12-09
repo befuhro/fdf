@@ -9,14 +9,13 @@ typedef struct	s_coord
 	int z;
 }		t_coord;
 
-typedef struct	s_mlx
+typedef  struct	s_whole
 {
 	void	*init;
 	void	*win;
-}		t_mlx;
-
-typedef  struct	s_whole
-{
 	int latitude;
+	int height;
+	int width;
+	char *buff;
 	t_coord **matrix;
 }		t_whole;
