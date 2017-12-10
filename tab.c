@@ -3,7 +3,7 @@
 #include <mlx.h>
 #include <stdio.h>
 
-t_coord **create_matrix(int latitude, int width, int height, char *buff);
+void	create_matrix(t_whole *whole);
 void	rely_point(t_coord **matrix, int width, int height, t_whole *whole);
 void	clear_window(t_whole *whole);
 
@@ -14,7 +14,7 @@ int		my_key_func(int keycode, t_whole *whole)
 	if (keycode == 65362)
 	{
 		whole->latitude += 1;
-		whole->matrix = create_matrix(whole->latitude, whole->width, whole->height, whole->buff);
+		create_matrix(whole);
 		clear_window(whole);	
 		rely_point(whole->matrix, whole->width, whole->height, whole);
 	}
@@ -22,7 +22,7 @@ int		my_key_func(int keycode, t_whole *whole)
 	if (keycode == 65364)
 	{
 		whole->latitude -= 1;
-		whole->matrix = create_matrix(whole->latitude, whole->width, whole->height, whole->buff);
+		create_matrix(whole);
 		clear_window(whole);	
 		rely_point(whole->matrix, whole->width, whole->height, whole);
 	}
@@ -70,9 +70,8 @@ int		count_width(char *buff)
 	return (j);
 }
 
-t_coord	**create_matrix(int latitude, int width, int height, char *buff)
+void	create_matrix(t_whole *whole)
 {
-	t_coord **matrix;
 	int i;
 	int j;
 	int k;
@@ -80,27 +79,35 @@ t_coord	**create_matrix(int latitude, int width, int height, char *buff)
 	j = -1;
 	i = -1;
 	k = 0;
-	matrix = (t_coord**)malloc(sizeof(t_coord*) * height);
-	while (++i < height)
-		matrix[i] = (t_coord*)malloc(sizeof(t_coord) * width);
+	whole->matrix = (t_coord**)malloc(sizeof(t_coord*) * whole->height);
+	while (++i < whole->height)
+		whole->matrix[i] = (t_coord*)malloc(sizeof(t_coord) * whole->width);
 	i = -1;
-	while (++i < height)
+	while (++i < whole->height)
 	{
-		while (++j < width)
+		while (++j < whole->width)
 		{
-			matrix[i][j].x = (i * 25) + (j * 25) + 50;
-			matrix[i][j].y = ((width - j) * latitude) + (i * latitude) + 300;
-			matrix[i][j].z = ft_atoi(buff + k);
-			if (matrix[i][j].z != 0)
-				matrix[i][j].y -= (matrix[i][j].z * 6);
-			while (buff[k] && ((buff[k] >= '0' && buff[k] <= '9') || buff[k] == '-'))
+			whole->matrix[i][j].x = (i * 25) + (j * 25) + 50;
+			whole->matrix[i][j].y = ((whole->middle.y - j) * whole->latitude) + (i * whole->latitude) + 300;
+			whole->matrix[i][j].z = ft_atoi(whole->buff + k);
+			whole->matrix[i][j].y -= (whole->matrix[i][j].z * 6);
+			while (whole->buff[k] && ((whole->buff[k] >= '0' && whole->buff[k] <= '9') || whole->buff[k] == '-'))
 				k++;
-			while (buff[k] && (buff[k] == ' ' || buff[k] == '\t' || buff[k] == '\n'))
+			while (whole->buff[k] && (whole->buff[k] == ' ' || whole->buff[k] == '\t' || whole->buff[k] == '\n'))
 				k++;
 		}
 		j = -1;
 	}
-	return (matrix);
+}
+
+void	rotate_matrix(t_whole *whole)
+{
+	
+	(void)whole;
+
+
+
+
 }
 
 void	clear_window(t_whole *whole)
@@ -162,12 +169,12 @@ void	trace_higher(t_coord begin, t_coord end, t_whole *whole)
 		while (line.x != end.x && line.y != end.y)
 		{
 			if (base < count)
-				line.x += 1;
+				line.x++;
 			else
-			{	
-				line.y -= 1;
-				line.x += 1;
-				count ++;
+			{
+				line.y--;
+				line.x++;
+				count++;
 			}
 			base += count_base;
 			print_color(whole, line, begin, end);
@@ -178,11 +185,11 @@ void	trace_higher(t_coord begin, t_coord end, t_whole *whole)
 		while (line.x != end.x && line.y != end.y)
 		{
 			if (base > count)
-				line.y -=1;
+				line.y--;
 			else
 			{
-				line.y -= 1;
-				line.x += 1;
+				line.y--;
+				line.x++;
 				base += count_base;
 			}
 			count++;
@@ -210,12 +217,12 @@ void	trace_lower(t_coord begin, t_coord end, t_whole *whole)
 		while (line.x != end.x && line.y != end.y)
 		{
 			if (base < count)
-				line.x += 1;
+				line.x++;
 			else
 			{	
-				line.y += 1;
-				line.x += 1;
-				count ++;
+				line.y++;
+				line.x++;
+				count++;
 			}
 			base += count_base;
 			print_color(whole, line, begin, end);
@@ -226,11 +233,11 @@ void	trace_lower(t_coord begin, t_coord end, t_whole *whole)
 		while (line.x != end.x && line.y != end.y)
 		{
 			if (base > count)
-				line.y += 1;
+				line.y++;
 			else
 			{
-				line.y += 1;
-				line.x += 1;
+				line.y++;
+				line.x++;
 				base += count_base;
 			}
 			count++;
@@ -250,7 +257,6 @@ void	trace_line(t_coord begin, t_coord end, t_whole *whole)
 		trace_higher(begin, end, whole);
 	else	
 		trace_lower(begin, end, whole);
-
 }
 
 
@@ -326,11 +332,13 @@ void	treatment(char *buff)
 	whole.latitude = 10;
 	whole.height = count_height(buff);
 	whole.width = count_width(buff);
+	whole.middle.y = whole.height / 2;
+	whole.middle.x = whole.width / 2; 
 	whole.buff = buff;
 	
 	whole.init = mlx_init();
 	whole.win = mlx_new_window(whole.init, 1080, 720, "mlx fdf");
-	whole.matrix = create_matrix(whole.latitude, whole.width, whole.height, buff);
+	create_matrix(ptr);
 	print_matrix(whole.matrix, whole.height, whole.width);
 
 
