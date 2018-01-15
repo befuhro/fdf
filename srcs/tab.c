@@ -1,15 +1,15 @@
-#include "libft.h"
+#include <libft.h>
 #include "fdf.h"
-#include "mlx.h"
+#include <mlx.h>
 #include <stdio.h>
 
 int		my_key_func(int keycode)
 {
-	if (keycode == 53)
+	if (keycode == 53 || keycode == 65307)
 		exit(0);
+	printf("keycode = %i\n", keycode);
 	return (0);
 }
-
 
 int		count_height(char *buff)
 {
@@ -47,9 +47,8 @@ int		count_width(char *buff)
 	return (j);
 }
 
-t_coord	**create_tab(int width, int height, char *buff)
+void	create_matrix(t_whole *whole)
 {
-	t_coord **matrix;
 	int i;
 	int j;
 	int k;
@@ -57,58 +56,154 @@ t_coord	**create_tab(int width, int height, char *buff)
 	j = -1;
 	i = -1;
 	k = 0;
-	matrix = (t_coord**)malloc(sizeof(t_coord*) * height);
-	while (++i < height)
-		matrix[i] = (t_coord*)malloc(sizeof(t_coord) * width);
+	whole->matrix = (t_coord**)malloc(sizeof(t_coord*) * whole->height);
+	while (++i < whole->height)
+		whole->matrix[i] = (t_coord*)malloc(sizeof(t_coord) * whole->width);
 	i = -1;
-	while (++i < height)
+	while (++i < whole->height)
 	{
-		while (++j < width)
+		while (++j < whole->width)
 		{
-			matrix[i][j].x = (i * 30) + (j * 30) + 50;
-			matrix[i][j].y = ((width - j) * 22) + (i * 22) + 50;
-			matrix[i][j].z = ft_atoi(buff + k);
-			if (matrix[i][j].z > 0)
-				matrix[i][j].y -= (matrix[i][j].z * 20);
-			while (buff[k] && (buff[k] >= '0' && buff[k] <= '9'))
+			whole->matrix[i][j].x = (i * 25) + (j * 25) + 50;
+			whole->matrix[i][j].y = (whole->middle.y - j) * 13 + i * 13 + 300;
+			whole->matrix[i][j].z = ft_atoi(whole->buff + k);
+			whole->matrix[i][j].y -= (whole->matrix[i][j].z * 3);
+			while (whole->buff[k] && ((whole->buff[k] >= '0' && whole->buff[k] <= '9') || whole->buff[k] == '-'))
 				k++;
-			while (buff[k] && (buff[k] == ' ' || buff[k] == '\t' || buff[k] == '\n'))
+			while (whole->buff[k] && (whole->buff[k] == ' ' || whole->buff[k] == '\n'))
 				k++;
 		}
 		j = -1;
 	}
-	return (matrix);
 }
 
-
-void	trace_line(t_coord begin, t_coord end, void *mlx, void *win)
+void	rotate_matrix(t_whole *whole)
 {
-	t_coord line;
 
-	line.x = begin.x;
-	line.y = begin.y;
-	printf("begin.x = %i\nbegin.y = %i\nend.x = %i\nend.y%i\n\n", begin.x, begin.y, end.x, end.y);
-	while (line.x != end.x && line.y != end.y)
+	(void)whole;
+
+
+
+
+}
+
+void	clear_window(t_whole *whole)
+{
+	int i;
+	int j;
+
+	i = 0;
+	j = 0;
+	while (i < 720)
 	{
-		if (end.y - line.y > 0)
+		while (j < 1080)
 		{
-			if ((end.y - line.y) > (end.x - line.x))
-				line.y += 1;
-			else
-				line.x += 1;
+			mlx_pixel_put(whole->init, whole->win, j, i, 0x00000000);
+			j++;
 		}
-		else
-		{
-			if ((line.y - end.y) > (end.x - line.x))
-				line.y -= 1;
-			else
-				line.x += 1;
-		}
-		mlx_pixel_put(mlx, win, line.x, line.y, 0x00FFFFFF);
+		j = 0;
+		i++;
 	}
 }
 
-void	rely_point(t_coord **matrix, int width, int height, void *mlx, void *win)
+
+void	print_color(t_whole *whole, t_coord point)
+{
+		mlx_pixel_put(whole->init, whole->win, (int)point.x, (int)point.y, 0x00FEFFFF);
+}
+
+
+void	trace_higher(t_coord begin, t_coord end, t_whole *whole)
+{
+	float ratio;
+	float y1;
+
+	ratio = (begin.y - end.y) / (end.x - begin.x);
+	y1 = begin.y;
+	while (begin.x != end.x && begin.y != end.y)
+	{
+		if (ratio < 1)
+		{
+			begin.x++;
+			begin.y -= ratio;
+		}
+		else
+		{
+			begin.y--;
+			if (y1 - begin.y > ratio)
+			{
+				begin.x++;
+				ratio += (end.y - begin.y) / (end.x - begin.x);
+			
+			}
+		
+		
+		
+		
+		
+		
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		print_color(whole, begin);
+	}
+}
+
+void	trace_lower(t_coord begin, t_coord end, t_whole *whole)
+{
+	float ratio;
+	float y1;
+
+	ratio = (end.y - begin.y) / (end.x - begin.x);
+	y1 = begin.y;
+	while (begin.x != end.x && begin.y != end.y)
+	{
+		if (ratio < 1)
+		{
+			begin.x++;
+			begin.y += ratio;
+		}
+		else
+		{
+			begin.y++;
+			if (begin.y - y1 >= ratio)
+			{
+				begin.x++;
+				ratio += (end.y - begin.y) / (end.x - begin.x);
+			}
+		}
+		print_color(whole, begin);
+	}
+}
+
+
+
+
+
+
+void	trace_line(t_coord begin, t_coord end, t_whole *whole)
+{
+	if (end.y - begin.y < 0)
+		trace_higher(begin, end, whole);
+	else	
+		trace_lower(begin, end, whole);
+}
+
+
+
+
+
+
+void	rely_point(t_coord **matrix, int width, int height, t_whole *whole)
 {
 	int i;
 	int j;
@@ -120,9 +215,9 @@ void	rely_point(t_coord **matrix, int width, int height, void *mlx, void *win)
 		while(j < width)
 		{
 			if (j < width - 1)
-				trace_line(matrix[i][j], matrix[i][j + 1], mlx, win);
+				trace_line(matrix[i][j], matrix[i][j + 1], whole);
 			if (i < height - 1)
-				trace_line(matrix[i][j], matrix[i + 1][j], mlx, win);
+				trace_line(matrix[i][j], matrix[i + 1][j], whole);
 			j++;
 		}
 		i++;
@@ -137,15 +232,15 @@ void	print_matrix(t_coord **matrix, int height, int width)
 	int i = 0;
 	int j = 0;
 
-	
+
 	while (i < height)
 	{
 		while (j < width)
 		{
 			if (matrix[i][j].z == 10)
-				printf(" %i", matrix[i][j].z);
+				printf(" %f", matrix[i][j].z);
 			else
-				printf("  %i", matrix[i][j].z);
+				printf("  %f", matrix[i][j].z);
 			j++;
 		}
 		printf("\n");
@@ -154,54 +249,13 @@ void	print_matrix(t_coord **matrix, int height, int width)
 	}
 }
 
-void	draw_square(t_coord point, void *mlx, void *win)
+
+void	print_window(t_whole *whole)
 {
-	int sub_x;
-	int sub_y;
 
-	sub_x = point.x - 2;
-	sub_y = point.y - 2;
-	while (sub_y < point.y + 2)
-	{
-		while (sub_x < point.x + 2)
-		{
-			if (point.z == 10)
-				mlx_pixel_put(mlx, win, sub_x, sub_y, 0x00FF0000);
-			else
-				mlx_pixel_put(mlx, win, sub_x, sub_y, 0x00FFFFFF);
-			sub_x++;
-		}
-		sub_x = point.x - 2;
-		sub_y++;
-	}
-}
-
-void	print_window(t_coord **matrix, int height, int width)
-{
-	void	*mlx;
-	void	*win;
-	int		i;
-	int 	j;
-
-	i = 0;
-	j = 0;
-	mlx = mlx_init();
-	win = mlx_new_window(mlx, 1080, 720, "mlx fdf");
-	
-	
-	while(i < height)
-	{
-		while (j < width)
-		{
-			draw_square(matrix[i][j], mlx, win);
-		//	rely_point(matrix, width, height, mlx, win);
-			j++;
-		}
-		j = 0;
-		i++;
-	}
-	mlx_key_hook(win, my_key_func, mlx);
-	mlx_loop(mlx);
+	mlx_key_hook(whole->win, my_key_func, whole);
+	rely_point(whole->matrix, whole->width, whole->height, whole);
+	mlx_loop(whole->init);
 }
 
 
@@ -210,17 +264,23 @@ void	print_window(t_coord **matrix, int height, int width)
 
 void	treatment(char *buff)
 {
-	int		height;
-	int		width;
-	t_coord	**matrix;
+	t_whole		*ptr;
+	t_whole		whole;
+
+	ptr = &whole;
+	whole.height = count_height(buff);
+	whole.width = count_width(buff);
+	whole.middle.y = whole.height / 2;
+	whole.middle.x = whole.width / 2; 
+	whole.buff = buff;
+
+	whole.init = mlx_init();
+	whole.win = mlx_new_window(whole.init, 1080, 720, "mlx fdf");
+	create_matrix(ptr);
+	print_matrix(whole.matrix, whole.height, whole.width);
 
 
-
-	height = count_height(buff);
-	width = count_width(buff);
-	matrix = create_tab(width, height, buff);
-	print_matrix(matrix, height, width);
-	print_window(matrix, height, width);
+	print_window(ptr);
 }
 
 
