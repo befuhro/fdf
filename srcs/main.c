@@ -1,39 +1,60 @@
-#include "mlx.h"
-#include <stdio.h>
-#include <stdlib.h>
+/* ************************************************************************** */
+/*                                                          LE - /            */
+/*                                                              /             */
+/*   main.c                                           .::    .:/ .      .::   */
+/*                                                 +:+:+   +:    +:  +:+:+    */
+/*   By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
+/*                                                 #+#   #+    #+    #+#      */
+/*   Created: 2018/01/16 16:28:20 by befuhro      #+#   ##    ##    #+#       */
+/*   Updated: 2018/01/16 16:38:42 by befuhro     ###    #+. /#+    ###.fr     */
+/*                                                         /                  */
+/*                                                        /                   */
+/* ************************************************************************** */
 
-int		my_key_function(int keycode, void *param)
+#include "fdf.h"
+
+int		my_key_func(int keycode)
 {
-	printf("key event %i\n", keycode);
-	if (keycode == 53)
+	if (keycode == 53 || keycode == 65307)
 		exit(0);
-	(void)param;
 	return (0);
 }
 
-
-int		main(void)
+void	treatment(char *buff)
 {
-	void *mlx;
-	void *win;
-	int x;
-	int y;
+	t_whole		*ptr;
+	t_whole		whole;
 
-	mlx = mlx_init();
-	win = mlx_new_window(mlx, 400, 400, "mlx 42");
-	x = 150;
-	y = 150;
-	while (y <= 250)
+	ptr = &whole;
+	whole.height = count_height(buff);
+	whole.width = count_width(buff);
+	whole.middle.y = whole.height / 2;
+	whole.middle.x = whole.width / 2;
+	whole.buff = buff;
+	whole.init = mlx_init();
+	whole.win = mlx_new_window(whole.init, 1080, 720, "mlx fdf");
+	create_matrix(ptr);
+	print_matrix(whole.matrix, whole.height, whole.width);
+	print_window(ptr);
+}
+
+int		main(int ac, char **av)
+{
+	int		fd;
+	char	buff[BUFF_SIZE + 1];
+	int		ret;
+
+	if (ac == 2)
 	{
-		while (x <= 250)
+		fd = open(av[1], O_RDONLY);
+		if (fd == -1)
 		{
-			mlx_pixel_put(mlx, win, x, y, 0x00FFFFFF);
-			x++;
+			ft_putendl("The file couldn't be open");
+			exit(1);
 		}
-		x = 150;
-		y++;
+		ret = read(fd, buff, BUFF_SIZE);
+		buff[ret] = '\0';
+		treatment(buff);
 	}
-	mlx_key_hook(win, my_key_function, mlx);
-	mlx_loop(mlx);
 	return (0);
 }
