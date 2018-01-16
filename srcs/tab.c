@@ -1,13 +1,15 @@
-#include <libft.h>
+#include "libft.h"
 #include "fdf.h"
-#include <mlx.h>
+#include "mlx.h"
 #include <stdio.h>
 
 int		my_key_func(int keycode)
 {
 	if (keycode == 53 || keycode == 65307)
+	{
+		
 		exit(0);
-	printf("keycode = %i\n", keycode);
+	}
 	return (0);
 }
 
@@ -77,16 +79,6 @@ void	create_matrix(t_whole *whole)
 	}
 }
 
-void	rotate_matrix(t_whole *whole)
-{
-
-	(void)whole;
-
-
-
-
-}
-
 void	clear_window(t_whole *whole)
 {
 	int i;
@@ -105,7 +97,6 @@ void	clear_window(t_whole *whole)
 		i++;
 	}
 }
-
 
 void	print_color(t_whole *whole, t_coord point)
 {
@@ -130,30 +121,12 @@ void	trace_higher(t_coord begin, t_coord end, t_whole *whole)
 		else
 		{
 			begin.y--;
-			if (y1 - begin.y > ratio)
+			if (y1 -begin.y >= ratio)
 			{
 				begin.x++;
-				ratio += (end.y - begin.y) / (end.x - begin.x);
-			
+				ratio += (begin.y - end.y) / (end.x - begin.x);
 			}
-		
-		
-		
-		
-		
-		
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		print_color(whole, begin);
 	}
 }
