@@ -6,7 +6,7 @@
 /*   By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/16 16:31:23 by befuhro      #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/18 15:04:23 by befuhro     ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/18 18:59:52 by befuhro     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -15,13 +15,23 @@
 
 void	print_color(t_whole *whole, t_coord point)
 {
-	mlx_pixel_put(whole->init, whole->win, point.x, point.y, 0x00FFFEFE - point.z * 3000);
-	if (point.z > 0)
-		printf("z = %f\n", point.z);
+	int color;
+	int hex1;
+	int hex2;
 
-
-
-
+	color = 16777215;
+	hex1 = 0;
+	hex2 = 0;
+	point.z *= 25;
+	while (point.z >= 16)
+	{
+		point.z -= 16;
+		hex2++;
+	}
+	while (point.z-- >= 0)
+		hex1++;
+	color -= (hex2 * pow(16, 3)) + (hex1 * pow(16, 2)) + (hex2 * 16) + hex1;
+	mlx_pixel_put(whole->init, whole->win, point.x, point.y, color);
 }
 
 void	manage_z(t_coord begin, t_coord end, t_coord *line)
@@ -56,11 +66,6 @@ void	trace_higher(t_coord begin, t_coord end, t_whole *whole)
 
 	ratio = (begin.y - end.y) / (end.x - begin.x);
 	line = begin;
-
-
-
-	printf("begin.z = %f\n", begin.z);
-
 	while (line.x != end.x && line.y != end.y)
 	{
 		if (ratio < 1)
@@ -80,11 +85,6 @@ void	trace_higher(t_coord begin, t_coord end, t_whole *whole)
 		manage_z(begin, end, &line);
 		print_color(whole, line);
 	}
-
-
-
-	printf("end.z = %f\n\n", end.z);
-
 }
 
 void	trace_lower(t_coord begin, t_coord end, t_whole *whole)
@@ -94,11 +94,6 @@ void	trace_lower(t_coord begin, t_coord end, t_whole *whole)
 
 	ratio = (end.y - begin.y) / (end.x - begin.x);
 	line = begin;
-
-
-
-	printf("begin.z = %f\n", begin.z);
-
 	while (line.x != end.x)
 	{
 		if (ratio < 1)
@@ -118,11 +113,6 @@ void	trace_lower(t_coord begin, t_coord end, t_whole *whole)
 		manage_z(begin, end, &line);
 		print_color(whole, line);
 	}	
-
-
-	printf("end.z = %f\n\n", end.z);
-
-
 }
 
 void	rely_point(t_coord **matrix, int width, int height, t_whole *whole)

@@ -6,7 +6,7 @@
 /*   By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/16 16:35:47 by befuhro      #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/17 16:13:55 by befuhro     ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/18 18:56:08 by befuhro     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -33,6 +33,23 @@ void	print_matrix(t_coord **matrix, int height, int width)
 		printf("\n");
 		j = 0;
 		i++;
+	}
+}
+
+void	clear_window(t_whole *whole)
+{
+	int i;
+	int j;
+
+	i = -1;
+	j = -1;
+	while (++i < 720)
+	{
+		while (++j < 1080)
+		{
+			mlx_pixel_put(whole->init, whole->win, j, i, 0);
+		}
+		j = -1;	
 	}
 }
 

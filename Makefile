@@ -1,18 +1,10 @@
-# **************************************************************************** #
-#                                                           LE - /             #
-#                                                               /              #
-#    Makefile                                         .::    .:/ .      .::    #
-#                                                  +:+:+   +:    +:  +:+:+     #
-#    By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+      #
-#                                                  #+#   #+    #+    #+#       #
-#    Created: 2017/11/30 13:54:18 by befuhro      #+#   ##    ##    #+#        #
-#    Updated: 2017/12/05 21:34:03 by befuhro     ###    #+. /#+    ###.fr      #
-#                                                          /                   #
-#                                                         /                    #
-# **************************************************************************** #
-
 SRC_PATH = 		srcs/
-SRC_NAME =		tab.c
+SRC_NAME =		print_window.c \
+				matrix_treatment.c \
+				window_treatment.c \
+				rely_point.c \
+				main.c \
+				
 SRC =			$(addprefix $(SRC_PATH),$(SRC_NAME))
 
 OBJ_PATH =		objs/
@@ -21,7 +13,7 @@ OBJ =			$(addprefix $(OBJ_PATH),$(OBJ_NAME))
 
 
 
-INC = 			-Iinclude -I libft
+INC = 			-I include -I libft
 
 LDLIBS = 		-lft
 LDFLAGS = 		-Llibft

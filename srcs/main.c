@@ -6,19 +6,12 @@
 /*   By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/16 16:28:20 by befuhro      #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/17 16:46:14 by befuhro     ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/18 19:07:20 by befuhro     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "fdf.h"
-
-int		my_key_func(int keycode)
-{
-	if (keycode == 53 || keycode == 65307)
-		exit(0);
-	return (0);
-}
 
 void	treatment(char *buff)
 {

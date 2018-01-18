@@ -6,7 +6,7 @@
 /*   By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/16 16:27:21 by befuhro      #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/18 14:58:51 by befuhro     ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/18 19:16:54 by befuhro     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -64,10 +64,10 @@ void	create_matrix(t_whole *whole)
 		whole->matrix[i] = (t_coord*)malloc(sizeof(t_coord) * whole->width);
 		while (++j < whole->width)
 		{
-			whole->matrix[i][j].x = (i * 40) + (j * 40) + 25;
-			whole->matrix[i][j].y = (whole->middle.y - j) * 20 + i * 20 + 300;
+			whole->matrix[i][j].x = (i * 20) + (j * 20) + 25;
+			whole->matrix[i][j].y = (whole->middle.y - j) * 15 + i * 15 + 300;
 			whole->matrix[i][j].z = ft_atoi(whole->buff + k);
-			whole->matrix[i][j].y -= (whole->matrix[i][j].z * 4);
+			whole->matrix[i][j].y -= (whole->matrix[i][j].z * 3);
 			while (whole->buff[k] && ((whole->buff[k] >= '0' &&
 					whole->buff[k] <= '9') || whole->buff[k] == '-'))
 				k++;
