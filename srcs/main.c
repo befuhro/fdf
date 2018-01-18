@@ -6,7 +6,7 @@
 /*   By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/16 16:28:20 by befuhro      #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/16 16:38:42 by befuhro     ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/17 16:46:14 by befuhro     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -34,7 +34,7 @@ void	treatment(char *buff)
 	whole.init = mlx_init();
 	whole.win = mlx_new_window(whole.init, 1080, 720, "mlx fdf");
 	create_matrix(ptr);
-	print_matrix(whole.matrix, whole.height, whole.width);
+//	print_matrix(whole.matrix, whole.height, whole.width);
 	print_window(ptr);
 }
 
