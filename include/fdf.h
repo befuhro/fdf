@@ -19,6 +19,8 @@ typedef  struct	s_whole
 	void	*init;
 	void	*win;
 	int 	zoom;
+	int 	z_min;
+	int 	z_max;
 	t_coord middle;
 	int height;
 	int width;
