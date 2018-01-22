@@ -6,7 +6,7 @@
 /*   By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/18 18:09:16 by befuhro      #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/20 18:52:12 by befuhro     ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/22 20:42:41 by befuhro     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -32,20 +32,13 @@ int		my_key_func(int keycode, t_whole *whole)
 		create_matrix(whole);
 		rely_point(whole->matrix, whole->width, whole->height, whole);
 	}
-	
-
-
-
-
-
-
 	return (0);
 }
 
 void	zoom(t_coord **matrix, int height, int width, int value)
 {
-	int i;
-	int j;
+	int		i;
+	int		j;
 	t_coord middle;
 
 	j = -1;

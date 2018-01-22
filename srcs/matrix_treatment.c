@@ -6,7 +6,7 @@
 /*   By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/16 16:27:21 by befuhro      #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/22 20:22:46 by befuhro     ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/22 21:05:43 by befuhro     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -49,6 +49,20 @@ int		count_width(char *buff)
 	return (j);
 }
 
+void	manage_coord(t_whole *whole, int i, int j, int k)
+{
+	whole->matrix[i][j].x = 539 - (((whole->height / 2 - i) * 2) * \
+			whole->zoom) - (((whole->width / 2 - j) * 2) * whole->zoom);
+	whole->matrix[i][j].y = 360 - ((whole->height / 2 - i) * whole->zoom) \
+			+ ((whole->width / 2 - j) * whole->zoom);
+	whole->matrix[i][j].z = ft_atoi(whole->buff + k);
+	whole->matrix[i][j].y -= whole->matrix[i][j].z * (0.3 * whole->zoom);
+	if (whole->matrix[i][j].z < whole->z_min)
+		whole->z_min = whole->matrix[i][j].z;
+	if (whole->matrix[i][j].z > whole->z_max)
+		whole->z_max = whole->matrix[i][j].z;
+}
+
 void	create_matrix(t_whole *whole)
 {
 	int i;
@@ -64,12 +78,9 @@ void	create_matrix(t_whole *whole)
 		whole->matrix[i] = (t_coord*)malloc(sizeof(t_coord) * whole->width);
 		while (++j < whole->width)
 		{
-			whole->matrix[i][j].x = 539 - (((whole->height / 2 - i) * 2) * whole->zoom) - (((whole->width / 2 - j) * 2) * whole->zoom);
-			whole->matrix[i][j].y = 360 - ((whole->height / 2 - i) * whole->zoom) + ((whole->width / 2 - j) * whole->zoom);
-			whole->matrix[i][j].z = ft_atoi(whole->buff + k);
-			whole->matrix[i][j].y -= whole->matrix[i][j].z * (0.3 * whole->zoom);
+			manage_coord(whole, i, j, k);
 			while (whole->buff[k] && ((whole->buff[k] >= '0' &&
-					whole->buff[k] <= '9') || whole->buff[k] == '-'))
+							whole->buff[k] <= '9') || whole->buff[k] == '-'))
 				k++;
 			while ((whole->buff[k] == ' ' || whole->buff[k] == '\n'))
 				k++;

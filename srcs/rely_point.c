@@ -6,12 +6,19 @@
 /*   By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/16 16:31:23 by befuhro      #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/22 19:03:31 by befuhro     ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/22 21:36:53 by befuhro     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "fdf.h"
+
+int		ft_abs(int n)
+{
+	if (n < 0)
+		return (-1);
+	return (n);
+}
 
 void	print_color(t_whole *whole, t_coord point)
 {
@@ -22,14 +29,33 @@ void	print_color(t_whole *whole, t_coord point)
 	color = 16777215;
 	hex1 = 0;
 	hex2 = 0;
-	point.z *= 25;
-	while (point.z >= 16)
+	point.z *= 255 / (whole->z_max - ft_abs(whole->z_min));
+	while (point.z >= 16 || point.z <= -16)
 	{
-		point.z -= 16;
-		hex2++;
+		if (point.z >= 16)
+		{
+			point.z -= 16;
+			hex2++;
+		}
+		else
+		{
+			point.z += 16;
+			hex2--;
+		}
 	}
-	while (point.z-- >= 0)
-		hex1++;
+	while (point.z > 1 || point.z < 0)
+	{
+		if (point.z > 0)
+		{
+			point.z--;
+			hex1++;
+		}
+		else
+		{
+			point.z++;
+			hex1--;
+		}
+	}
 	color -= (hex2 * pow(16, 3)) + (hex1 * pow(16, 2)) + (hex2 * 16) + hex1;
 	mlx_pixel_put(whole->init, whole->win, point.x, point.y, color);
 }
@@ -66,7 +92,6 @@ void	trace_higher(t_coord begin, t_coord end, t_whole *whole)
 
 	ratio = (begin.y - end.y) / (end.x - begin.x);
 	line = begin;
-
 	print_color(whole, line);
 	while (line.x != end.x && line.y != end.y)
 	{
@@ -114,7 +139,7 @@ void	trace_lower(t_coord begin, t_coord end, t_whole *whole)
 		}
 		manage_z(begin, end, &line);
 		print_color(whole, line);
-	}	
+	}
 }
 
 void	rely_point(t_coord **matrix, int width, int height, t_whole *whole)

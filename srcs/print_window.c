@@ -6,35 +6,12 @@
 /*   By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/16 16:35:47 by befuhro      #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/20 18:40:20 by befuhro     ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/22 20:43:16 by befuhro     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "fdf.h"
-
-void	print_matrix(t_coord **matrix, int height, int width)
-{
-	int i;
-	int j;
-
-	i = 0;
-	j = 0;
-	while (i < height)
-	{
-		while (j < width)
-		{
-			if (matrix[i][j].z == 10)
-				printf(" %f", matrix[i][j].z);
-			else
-				printf("  %f", matrix[i][j].z);
-			j++;
-		}
-		printf("\n");
-		j = 0;
-		i++;
-	}
-}
 
 void	clear_window(t_whole *whole)
 {
@@ -49,7 +26,7 @@ void	clear_window(t_whole *whole)
 		{
 			mlx_pixel_put(whole->init, whole->win, j, i, 0);
 		}
-		j = -1;	
+		j = -1;
 	}
 }
 
