@@ -6,7 +6,7 @@
 /*   By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/16 16:28:20 by befuhro      #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/18 19:07:20 by befuhro     ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/22 16:44:10 by befuhro     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -23,6 +23,7 @@ void	treatment(char *buff)
 	whole.width = count_width(buff);
 	whole.middle.y = whole.height / 2;
 	whole.middle.x = whole.width / 2;
+	whole.zoom = 1;
 	whole.buff = buff;
 	whole.init = mlx_init();
 	whole.win = mlx_new_window(whole.init, 1080, 720, "mlx fdf");

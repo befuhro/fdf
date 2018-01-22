@@ -6,7 +6,7 @@
 /*   By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/18 18:09:16 by befuhro      #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/18 19:32:05 by befuhro     ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/20 18:52:12 by befuhro     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -20,13 +20,16 @@ int		my_key_func(int keycode, t_whole *whole)
 	if (keycode == 69)
 	{
 		clear_window(whole);
-		zoom(whole->matrix, whole->height, whole->width, 1);
+		whole->zoom++;
+		create_matrix(whole);
 		rely_point(whole->matrix, whole->width, whole->height, whole);
 	}
 	if (keycode == 78)
 	{
 		clear_window(whole);
-		zoom(whole->matrix, whole->height, whole->width, -1);
+		if (whole->zoom > 0)
+			whole->zoom--;
+		create_matrix(whole);
 		rely_point(whole->matrix, whole->width, whole->height, whole);
 	}
 	
