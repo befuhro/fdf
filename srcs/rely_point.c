@@ -6,7 +6,7 @@
 /*   By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/16 16:31:23 by befuhro      #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/18 18:59:52 by befuhro     ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/22 19:03:31 by befuhro     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -66,6 +66,8 @@ void	trace_higher(t_coord begin, t_coord end, t_whole *whole)
 
 	ratio = (begin.y - end.y) / (end.x - begin.x);
 	line = begin;
+
+	print_color(whole, line);
 	while (line.x != end.x && line.y != end.y)
 	{
 		if (ratio < 1)
