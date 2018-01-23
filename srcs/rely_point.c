@@ -6,7 +6,7 @@
 /*   By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/16 16:31:23 by befuhro      #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/22 22:27:36 by befuhro     ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/23 20:26:52 by befuhro     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -29,7 +29,11 @@ void	print_color(t_whole *whole, t_coord point)
 	color = 16777215;
 	hex1 = 0;
 	hex2 = 0;
-	point.z *= 255 / (whole->z_max - ft_abs(whole->z_min));
+	if (whole->z_max != 0 || whole->z_min != 0)
+		point.z *= 255 / (whole->z_max - ft_abs(whole->z_min));
+	if (point.z >= -25 && point.z < 0)
+		point.z = 0;
+
 	while (point.z >= 16 || point.z <= -16)
 	{
 		if (point.z >= 16)
@@ -43,7 +47,7 @@ void	print_color(t_whole *whole, t_coord point)
 			hex2--;
 		}
 	}
-	while (point.z > 1 || point.z < 0)
+	while (point.z >= 1 || point.z < 0)
 	{
 		if (point.z > 0)
 		{
@@ -56,7 +60,10 @@ void	print_color(t_whole *whole, t_coord point)
 			hex1--;
 		}
 	}
-	color -= (hex2 * pow(16, 3)) + (hex1 * pow(16, 2)) + (hex2 * 16) + hex1;
+	if (hex1 >= 0 || hex2 >= 0)
+		color -= (hex2 * pow(16, 3)) + (hex1 * pow(16, 2)) + (hex2 * 16) + hex1;
+	else
+		color += hex2 * pow(16, 5) + hex1 * pow(16, 4);
 	mlx_pixel_put(whole->init, whole->win, point.x, point.y, color);
 }
 

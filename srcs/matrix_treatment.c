@@ -6,7 +6,7 @@
 /*   By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/16 16:27:21 by befuhro      #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/22 22:28:10 by befuhro     ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/23 19:09:10 by befuhro     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -44,7 +44,10 @@ int		count_width(char *buff)
 			while (buff[i] == ' ')
 				i++;
 		}
-		i++;
+		if (buff[i] != '\n')
+			 i++;
+		if (buff[i] == '\n' && (buff[i - 1] == ' ' || buff[i + 1] == ' '))
+			j--;
 	}
 	return (j);
 }
@@ -56,7 +59,7 @@ void	manage_coord(t_whole *whole, int i, int j, int k)
 	whole->matrix[i][j].y = 360 - ((whole->height / 2 - i) * whole->zoom) \
 			+ ((whole->width / 2 - j) * whole->zoom);
 	whole->matrix[i][j].z = ft_atoi(whole->buff + k);
-	whole->matrix[i][j].y -= whole->matrix[i][j].z * (0.3 * whole->zoom);
+	whole->matrix[i][j].y -= whole->matrix[i][j].z * (3 * whole->zoom);
 	if (whole->matrix[i][j].z < whole->z_min)
 		whole->z_min = whole->matrix[i][j].z;
 	if (whole->matrix[i][j].z > whole->z_max)
@@ -82,9 +85,10 @@ void	create_matrix(t_whole *whole)
 			while (whole->buff[k] && ((whole->buff[k] >= '0' &&
 							whole->buff[k] <= '9') || whole->buff[k] == '-'))
 				k++;
-			while ((whole->buff[k] == ' ' || whole->buff[k] == '\n'))
+			while (whole->buff[k] == ' ')
 				k++;
 		}
+		k++;
 		j = -1;
 	}
 }

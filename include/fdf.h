@@ -5,7 +5,7 @@
 #include "libft.h"
 #include <math.h>
 
-# define BUFF_SIZE 16000
+# define BUFF_SIZE 64000
 
 typedef struct	s_coord
 {
