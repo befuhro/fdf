@@ -3,6 +3,7 @@ SRC_NAME =		print_window.c \
 				matrix_treatment.c \
 				window_treatment.c \
 				rely_point.c \
+				print_color.c \
 				main.c \
 				
 SRC =			$(addprefix $(SRC_PATH),$(SRC_NAME))
