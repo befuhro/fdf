@@ -6,7 +6,7 @@
 /*   By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/18 18:09:16 by befuhro      #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/01 14:19:40 by befuhro     ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/01 14:53:05 by befuhro     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -20,22 +20,31 @@ int		my_key_func(int keycode, t_whole *whole)
 		free_matrix(whole->matrix, whole->height);
 		exit(0);
 	}
+	if (keycode == 69 || keycode == 78 || (keycode >= 123 && keycode <= 126))
+		treat_keycode(keycode, whole);
+	return (0);
+}
+
+void	treat_keycode(int keycode, t_whole *whole)
+{
+	mlx_clear_window(whole->init, whole->win);
 	if (keycode == 69)
-	{
-		mlx_clear_window(whole->init, whole->win);
 		whole->zoom++;
-		modify_matrix(whole);
-		rely_point(whole->matrix, whole->width, whole->height, whole);
-	}
 	if (keycode == 78)
 	{
-		mlx_clear_window(whole->init, whole->win);
 		if (whole->zoom > 0)
 			whole->zoom--;
-		modify_matrix(whole);
-		rely_point(whole->matrix, whole->width, whole->height, whole);
 	}
-	return (0);
+	if (keycode == 124)
+		whole->middle.x += 5;
+	if (keycode == 123)
+		whole->middle.x -= 5;
+	if (keycode == 126)
+		whole->middle.y -= 5;
+	if (keycode == 125)
+		whole->middle.y += 5;
+	modify_matrix(whole);
+	rely_point(whole->matrix, whole->width, whole->height, whole);
 }
 
 void	free_matrix(t_coord **matrix, int height)

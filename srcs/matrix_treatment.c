@@ -6,7 +6,7 @@
 /*   By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/16 16:27:21 by befuhro      #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/27 13:37:35 by befuhro     ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/01 14:53:45 by befuhro     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -51,10 +51,10 @@ int		count_width(char *buff)
 
 void	manage_coord(t_whole *whole, int i, int j, int k)
 {
-	whole->matrix[i][j].x = 540 - (((whole->height / 2 - i) * 2) * \
+	whole->matrix[i][j].x = whole->middle.x - (((whole->height / 2 - i) * 2) * \
 			whole->zoom) - (((whole->width / 2 - j) * 2) * whole->zoom);
-	whole->matrix[i][j].y = 360 - ((whole->height / 2 - i) * whole->zoom) \
-			+ ((whole->width / 2 - j) * whole->zoom);
+	whole->matrix[i][j].y = whole->middle.y - ((whole->height / 2 - i) *\
+			whole->zoom) + ((whole->width / 2 - j) * whole->zoom);
 	whole->matrix[i][j].z = ft_atoi(whole->buff + k);
 	whole->matrix[i][j].y -= whole->matrix[i][j].z * (3 * whole->zoom);
 	if (whole->matrix[i][j].z < whole->z_min)

@@ -6,7 +6,7 @@
 /*   By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/24 12:55:10 by befuhro      #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/27 13:38:46 by befuhro     ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/01 14:54:29 by befuhro     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -63,5 +63,6 @@ void			treatment(char *buff);
 void			zoom(t_coord **matrix, int height, int width, int value);
 void			clear_window(t_whole *whole);
 void			free_matrix(t_coord **matrix, int height);
+void			treat_keycode(int keycode, t_whole *whole);
 
 #endif

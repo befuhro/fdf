@@ -6,7 +6,7 @@
 /*   By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/16 16:28:20 by befuhro      #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/25 17:01:46 by befuhro     ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/01 14:24:19 by befuhro     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -19,8 +19,8 @@ void	treatment(char *buff)
 
 	whole.height = count_height(buff);
 	whole.width = count_width(buff);
-	whole.middle.y = whole.height / 2;
-	whole.middle.x = whole.width / 2;
+	whole.middle.y = 360;
+	whole.middle.x = 540;
 	whole.zoom = 1;
 	whole.buff = buff;
 	whole.init = mlx_init();
