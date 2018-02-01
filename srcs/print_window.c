@@ -6,7 +6,7 @@
 /*   By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/16 16:35:47 by befuhro      #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/22 22:27:12 by befuhro     ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/25 16:52:04 by befuhro     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -23,9 +23,7 @@ void	clear_window(t_whole *whole)
 	while (++i < 720)
 	{
 		while (++j < 1080)
-		{
 			mlx_pixel_put(whole->init, whole->win, j, i, 0);
-		}
 		j = -1;
 	}
 }

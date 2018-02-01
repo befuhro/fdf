@@ -6,7 +6,7 @@
 /*   By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/18 18:09:16 by befuhro      #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/22 22:27:46 by befuhro     ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/01 14:19:40 by befuhro     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -16,23 +16,39 @@
 int		my_key_func(int keycode, t_whole *whole)
 {
 	if (keycode == 53 || keycode == 65307)
+	{
+		free_matrix(whole->matrix, whole->height);
 		exit(0);
+	}
 	if (keycode == 69)
 	{
-		clear_window(whole);
+		mlx_clear_window(whole->init, whole->win);
 		whole->zoom++;
-		create_matrix(whole);
+		modify_matrix(whole);
 		rely_point(whole->matrix, whole->width, whole->height, whole);
 	}
 	if (keycode == 78)
 	{
-		clear_window(whole);
+		mlx_clear_window(whole->init, whole->win);
 		if (whole->zoom > 0)
 			whole->zoom--;
-		create_matrix(whole);
+		modify_matrix(whole);
 		rely_point(whole->matrix, whole->width, whole->height, whole);
 	}
 	return (0);
+}
+
+void	free_matrix(t_coord **matrix, int height)
+{
+	int i;
+
+	i = 0;
+	while (i < height)
+	{
+		free(matrix[i]);
+		i++;
+	}
+	free(matrix);
 }
 
 void	zoom(t_coord **matrix, int height, int width, int value)

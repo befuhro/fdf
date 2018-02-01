@@ -6,7 +6,7 @@
 /*   By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/16 16:28:20 by befuhro      #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/22 20:43:31 by befuhro     ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/25 17:01:46 by befuhro     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -15,10 +15,8 @@
 
 void	treatment(char *buff)
 {
-	t_whole		*ptr;
 	t_whole		whole;
 
-	ptr = &whole;
 	whole.height = count_height(buff);
 	whole.width = count_width(buff);
 	whole.middle.y = whole.height / 2;
@@ -27,8 +25,8 @@ void	treatment(char *buff)
 	whole.buff = buff;
 	whole.init = mlx_init();
 	whole.win = mlx_new_window(whole.init, 1080, 720, "mlx fdf");
-	create_matrix(ptr);
-	print_window(ptr);
+	create_matrix(&whole);
+	print_window(&whole);
 }
 
 int		main(int ac, char **av)

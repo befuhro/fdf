@@ -6,7 +6,7 @@
 /*   By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/24 12:55:10 by befuhro      #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/24 14:21:51 by befuhro     ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/27 13:38:46 by befuhro     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -44,6 +44,7 @@ typedef struct	s_whole
 }				t_whole;
 
 void			create_matrix(t_whole *whole);
+void			modify_matrix(t_whole *whole);
 void			rely_point(t_coord **matrix, int width, int height,\
 				t_whole *whole);
 void			clear_window(t_whole *whole);
@@ -61,5 +62,6 @@ void			print_window(t_whole *whole);
 void			treatment(char *buff);
 void			zoom(t_coord **matrix, int height, int width, int value);
 void			clear_window(t_whole *whole);
+void			free_matrix(t_coord **matrix, int height);
 
 #endif

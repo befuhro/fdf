@@ -6,7 +6,7 @@
 /*   By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/16 16:27:21 by befuhro      #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/24 15:55:34 by befuhro     ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/27 13:37:35 by befuhro     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -61,6 +61,33 @@ void	manage_coord(t_whole *whole, int i, int j, int k)
 		whole->z_min = whole->matrix[i][j].z;
 	if (whole->matrix[i][j].z > whole->z_max)
 		whole->z_max = whole->matrix[i][j].z;
+}
+
+void	modify_matrix(t_whole *whole)
+{
+	int i;
+	int j;
+	int k;
+
+	j = -1;
+	i = -1;
+	k = 0;
+	while (++i < whole->height)
+	{
+		while (whole->buff[k] == ' ')
+			k++;
+		while (++j < whole->width)
+		{
+			manage_coord(whole, i, j, k);
+			while (whole->buff[k] && ((whole->buff[k] >= '0' &&
+							whole->buff[k] <= '9') || whole->buff[k] == '-'))
+				k++;
+			while (whole->buff[k] == ' ')
+				k++;
+		}
+		k++;
+		j = -1;
+	}
 }
 
 void	create_matrix(t_whole *whole)
