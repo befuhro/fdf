@@ -6,7 +6,7 @@
 /*   By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/16 16:28:20 by befuhro      #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/09 17:15:02 by befuhro     ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/09 17:26:26 by befuhro     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -21,7 +21,8 @@ void	check_file(char *file)
 	while (file[i])
 	{
 		if ((file[i] < '0' || file[i] > '9')
-		&& file[i] != ' ' && file[i] != '\t' && file[i] != '\n')
+			&& (file[i] < 9 || file[i] > 13)
+			&& file[i] != ' ' && file[i] != '-')
 		{
 			ft_putendl("The format of the file is wrong");
 			exit(0);
