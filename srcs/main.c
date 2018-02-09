@@ -6,17 +6,35 @@
 /*   By: befuhro <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/01/16 16:28:20 by befuhro      #+#   ##    ##    #+#       */
-/*   Updated: 2018/02/01 14:24:19 by befuhro     ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/02/09 17:15:02 by befuhro     ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
+void	check_file(char *file)
+{
+	int i;
+
+	i = 0;
+	while (file[i])
+	{
+		if ((file[i] < '0' || file[i] > '9')
+		&& file[i] != ' ' && file[i] != '\t' && file[i] != '\n')
+		{
+			ft_putendl("The format of the file is wrong");
+			exit(0);
+		}
+		i++;
+	}
+}
+
 void	treatment(char *buff)
 {
 	t_whole		whole;
 
+	check_file(buff);
 	whole.height = count_height(buff);
 	whole.width = count_width(buff);
 	whole.middle.y = 360;
