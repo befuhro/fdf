@@ -1,6 +1,6 @@
 # FDF
 
-## Objectifs
+## Description
 FDF est un projet d'école qui a pour but de générer une map type fil de fer à partir d'une map qui contient les coordonnées des différents points de cette map  
 Il est realisé en C à l'aide de la minilibx (librairie minimaliste conçue pour les projet d'épitech et de 42)  
 
